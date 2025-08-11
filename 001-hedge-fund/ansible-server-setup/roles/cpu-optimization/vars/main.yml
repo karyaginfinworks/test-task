@@ -1,0 +1,53 @@
+---
+# Variables for cpu-optimization role
+
+# Paths to system files
+cpu_governor_path: "/sys/devices/system/cpu/cpu*/cpufreq/scaling_governor"
+cpu_freq_min_path: "/sys/devices/system/cpu/cpu*/cpufreq/scaling_min_freq"
+cpu_freq_max_path: "/sys/devices/system/cpu/cpu*/cpufreq/scaling_max_freq"
+
+# Intel specific paths
+intel_pstate_path: "/sys/devices/system/cpu/intel_pstate"
+intel_turbo_path: "/sys/devices/system/cpu/intel_pstate/no_turbo"
+intel_min_perf_path: "/sys/devices/system/cpu/intel_pstate/min_perf_pct"
+intel_max_perf_path: "/sys/devices/system/cpu/intel_pstate/max_perf_pct"
+
+# AMD specific paths
+amd_pstate_path: "/sys/devices/system/cpu/amd_pstate"
+amd_boost_path: "/sys/devices/system/cpu/cpufreq/boost"
+
+# Packages for CPU management
+required_packages:
+  - cpufrequtils
+  - linux-tools-common
+  - linux-tools-generic
+
+# AMD specific packages
+amd_packages:
+  - amd64-microcode
+
+# Intel specific packages
+intel_packages:
+  - intel-microcode
+
+# Commands for checking
+check_commands:
+  cpu_info: "lscpu"
+  cpu_vendor: "lscpu | grep 'Vendor ID' | awk '{print $3}'"
+  cpu_governor: "cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
+  cpu_freq: "cat /proc/cpuinfo | grep 'cpu MHz'"
+  intel_turbo_status: "cat /sys/devices/system/cpu/intel_pstate/no_turbo"
+  amd_boost_status: "cat /sys/devices/system/cpu/cpufreq/boost"
+
+# Supported governors
+supported_governors:
+  - performance
+  - powersave
+  - ondemand
+  - conservative
+  - schedutil
+
+# CPU vendors
+cpu_vendors:
+  intel: "GenuineIntel"
+  amd: "AuthenticAMD"

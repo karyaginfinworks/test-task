@@ -1,0 +1,10 @@
+---
+# Variables for disk-encryption role
+required_packages:
+  - cryptsetup
+  - cryptsetup-bin
+
+# Commands for checking
+check_commands:
+  luks_status: "cryptsetup status {{ encrypted_device_name }}"
+  device_exists: "test -b {{ disk_to_encrypt }}"

@@ -1,0 +1,20 @@
+---
+# Variables for network-setup role
+
+# Required packages for network operations
+required_packages:
+  - net-tools
+  - iproute2
+
+# Ubuntu specific packages
+ubuntu_packages:
+  - netplan.io
+
+# Commands for network discovery
+check_commands:
+  active_interface: "ip route | grep default | awk '{print $5}' | head -1"
+  interface_info: "ip addr show"
+
+# System paths
+system_paths:
+  netplan_dir: "/etc/netplan"

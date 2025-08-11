@@ -1,0 +1,51 @@
+---
+# Default values for system-info role
+
+# Report settings
+report_output_dir: "/tmp"
+report_filename: "system_info_report.txt"
+detailed_report: true
+include_sensitive_info: false
+generate_report: true
+display_info: true
+
+# Information gathering settings
+gather_cpu_info: true
+gather_memory_info: true
+gather_disk_info: true
+gather_network_info: true
+gather_kernel_info: true
+gather_virtualization_info: true
+
+# Intel Hyper-Threading settings
+check_hyperthreading: true
+check_intel_features: true
+
+# AMD SMT settings
+check_amd_smt: true
+check_amd_features: true
+
+# Performance settings
+check_cpu_frequency: true
+check_cpu_governor: true
+check_power_management: true
+
+# Security settings
+check_security_features: true
+check_mitigations: true
+
+# Report formatting
+report_format: "text"  # text, json, yaml
+include_timestamps: true
+include_ansible_facts: false
+
+# Additional checks
+check_hardware_info: true
+check_bios_info: true
+check_pci_devices: false
+check_usb_devices: false
+
+# Output settings
+display_summary: true
+display_detailed_info: true
+save_to_file: false

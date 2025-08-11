@@ -1,0 +1,23 @@
+---
+# Defaults for network-setup role
+
+# Network interface name (will be taken from inventory vm_if_name)
+# This is just a fallback if vm_if_name is not defined in inventory
+new_interface_name: "net0"
+
+# Connectivity test settings
+connectivity_check: true
+connectivity_test_host: "8.8.8.8"
+connectivity_timeout: 10
+
+# Network interface configuration (for netplan)
+interface_config:
+  dhcp4: true
+  dhcp6: false
+  optional: true
+
+# Paths
+netplan_config_dir: "/etc/netplan"
+
+# Timing
+network_stabilize_delay: 5

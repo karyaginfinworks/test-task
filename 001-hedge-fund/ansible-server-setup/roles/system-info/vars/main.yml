@@ -1,0 +1,108 @@
+---
+# Variables for system-info role
+
+# CPU vendor detection
+cpu_vendor: "{{ 'intel' if ansible_processor[0] is search('Intel') else 'amd' if ansible_processor[0] is search('AMD') else 'unknown' }}"
+
+# Hyperthreading status variable
+hyperthreading_status: "unknown"
+
+# Commands for CPU information gathering
+cpu_commands:
+  lscpu: "lscpu"
+  cpuinfo: "cat /proc/cpuinfo"
+  cpu_count: "nproc --all"
+  cpu_freq: "cat /proc/cpuinfo | grep 'cpu MHz' | head -5"
+  cpu_governor: "cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
+  cpu_driver: "cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_driver"
+
+# Commands for Intel Hyper-Threading check
+intel_commands:
+  ht_check: "grep -q 'ht' /proc/cpuinfo && echo 'enabled' || echo 'disabled'"
+  logical_cpus: "nproc"
+  physical_cpus: "lscpu | grep 'Core(s) per socket' | awk '{print $4}'"
+  threads_per_core: "lscpu | grep 'Thread(s) per core' | awk '{print $4}'"
+  intel_pstate: "cat /sys/devices/system/cpu/intel_pstate/status"
+
+# Commands for AMD SMT check
+amd_commands:
+  smt_check: "[ -f /sys/devices/system/cpu/smt/active ] && cat /sys/devices/system/cpu/smt/active || echo 'not_supported'"
+  smt_control: "[ -f /sys/devices/system/cpu/smt/control ] && cat /sys/devices/system/cpu/smt/control || echo 'not_available'"
+  amd_pstate: "[ -d /sys/devices/system/cpu/amd_pstate ] && echo 'available' || echo 'not_available'"
+
+# Commands for memory information gathering
+memory_commands:
+  meminfo: "cat /proc/meminfo"
+  free: "free -h"
+  dmidecode_memory: "dmidecode -t memory"
+
+# Commands for disk information gathering
+disk_commands:
+  lsblk: "lsblk -f"
+  df: "df -h"
+  fdisk: "fdisk -l"
+  mount: "mount | grep -E '^/dev'"
+
+# Commands for network information gathering
+network_commands:
+  interfaces: "ip link show"
+  addresses: "ip addr show"
+  routes: "ip route show"
+  netstat: "netstat -i"
+
+# Commands for kernel information gathering
+kernel_commands:
+  uname: "uname -a"
+  version: "cat /proc/version"
+  cmdline: "cat /proc/cmdline"
+  modules: "lsmod | head -20"
+
+# Commands for virtualization check
+virtualization_commands:
+  virt_what: "virt-what"
+  dmi_product: "dmidecode -s system-product-name"
+  dmi_manufacturer: "dmidecode -s system-manufacturer"
+  hypervisor: "[ -d /proc/xen ] && echo 'xen' || echo 'none'"
+
+# Commands for security check
+security_commands:
+  mitigations: "cat /proc/cmdline | grep -o 'mitigations=[^ ]*'"
+  spectre_v1: "cat /sys/devices/system/cpu/vulnerabilities/spectre_v1"
+  spectre_v2: "cat /sys/devices/system/cpu/vulnerabilities/spectre_v2"
+  meltdown: "cat /sys/devices/system/cpu/vulnerabilities/meltdown"
+
+# Commands for hardware check
+hardware_commands:
+  dmidecode_system: "dmidecode -t system"
+  dmidecode_bios: "dmidecode -t bios"
+  lspci: "lspci"
+  lsusb: "lsusb"
+
+# Paths to system files
+system_files:
+  cpuinfo: "/proc/cpuinfo"
+  meminfo: "/proc/meminfo"
+  version: "/proc/version"
+  cmdline: "/proc/cmdline"
+  uptime: "/proc/uptime"
+  loadavg: "/proc/loadavg"
+
+# Paths to sysfs files
+sysfs_paths:
+  cpu_base: "/sys/devices/system/cpu"
+  intel_pstate: "/sys/devices/system/cpu/intel_pstate"
+  amd_pstate: "/sys/devices/system/cpu/amd_pstate"
+  smt_control: "/sys/devices/system/cpu/smt"
+  vulnerabilities: "/sys/devices/system/cpu/vulnerabilities"
+
+# Required packages for information gathering
+required_packages:
+  - dmidecode
+  - pciutils
+  - usbutils
+
+# Additional packages
+optional_packages:
+  - virt-what
+  - lshw
+  - hwinfo
